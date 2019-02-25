@@ -41,13 +41,13 @@ div.append(span)
 span.text = "Hello World"
 
 L1div = ElementTree.Element("div")
-L1 = ElementTree.Element("a", attrib={"href": "Generated/items.html"}) 
+L1 = ElementTree.Element("a", attrib={"href": "Generated/Items.html"}) 
 L1div.append(L1)
 body.append(L1div)
 L1.text = "Items"
 
 L2div = ElementTree.Element("div")
-L2 = ElementTree.Element("a", attrib={"href": "Generated/biomes.html"}) 
+L2 = ElementTree.Element("a", attrib={"href": "Generated/Biomes.html"}) 
 L2div.append(L2)
 body.append(L2div)
 L2.text = "Biomes"
