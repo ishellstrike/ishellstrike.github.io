@@ -32,6 +32,9 @@ for dirpath, dirnames, filenames in os.walk("e:\Games\WindowsNoEditor\Evospace\C
 					div.append(span)
 					span.text = object["Name"]
 					
+					img = ElementTree.Element("img", attrib={"src": "Items/" + object["Image"] + ".png"})
+					div.append(img)
+					
 string = ElementTree.tostring(html).decode()
 
 file = open("Generated/Items.html","w+")
@@ -67,16 +70,32 @@ for dirpath, dirnames, filenames in os.walk("e:\Games\WindowsNoEditor\Evospace\C
 										output[i, j] = tuple(int((l / 255.0) * (r / 255.0) * 255) for l, r in zip(pixels[i, j], mpixels[i, j]))
 										
 							if "AddMask" in image:
-								mbase = Image.open("Source/" + image["AddMask"] + ".tga")
-								mpixels = mbase.load()
-								for i in range(img.size[0]):
-									for j in range(img.size[1]):
-										r = int(lerp(output[i, j][0], mpixels[i, j][0], mpixels[i, j][3] / 255.0))
-										g = int(lerp(output[i, j][1], mpixels[i, j][1], mpixels[i, j][3] / 255.0))
-										b = int(lerp(output[i, j][2], mpixels[i, j][2], mpixels[i, j][3] / 255.0))
-										a = output[i, j][3]
-										
-										output[i, j] = (r, g, b, a)
+								try:
+									if isinstance(image["AddMask"], list):
+										for addmask in image["AddMask"]:
+											mbase = Image.open("Source/" + addmask + ".tga")
+											mpixels = mbase.load()
+											for i in range(img.size[0]):
+												for j in range(img.size[1]):
+													r = int(lerp(output[i, j][0], mpixels[i, j][0], mpixels[i, j][3] / 255.0))
+													g = int(lerp(output[i, j][1], mpixels[i, j][1], mpixels[i, j][3] / 255.0))
+													b = int(lerp(output[i, j][2], mpixels[i, j][2], mpixels[i, j][3] / 255.0))
+													a = output[i, j][3]
+													
+													output[i, j] = (r, g, b, a)
+									else:
+										mbase = Image.open("Source/" + image["AddMask"] + ".tga")
+										mpixels = mbase.load()
+										for i in range(img.size[0]):
+											for j in range(img.size[1]):
+												r = int(lerp(output[i, j][0], mpixels[i, j][0], mpixels[i, j][3] / 255.0))
+												g = int(lerp(output[i, j][1], mpixels[i, j][1], mpixels[i, j][3] / 255.0))
+												b = int(lerp(output[i, j][2], mpixels[i, j][2], mpixels[i, j][3] / 255.0))
+												a = output[i, j][3]
+												
+												output[i, j] = (r, g, b, a)
+								except IOError:
+									None
 							
 							
 							for i in range(img.size[0]):
@@ -86,4 +105,13 @@ for dirpath, dirnames, filenames in os.walk("e:\Games\WindowsNoEditor\Evospace\C
 							
 							img.save("Generated/Items/" + image["NewName"] + ".png")
 						except IOError:
-							print image["NewName"] + " err"
+							print image["NewName"] + " err" + str(IOError)
+
+for dirpath, dirnames, filenames in os.walk("Source"):
+	for filename in [f for f in filenames if f.endswith(".TGA")]:
+		fullname = os.path.join(dirpath, filename)
+		img = Image.open(fullname)
+		name = "Generated/Items/" + os.path.splitext(filename)[0] + ".png"
+		img.save(name)
+		print "copy " + name
+			
