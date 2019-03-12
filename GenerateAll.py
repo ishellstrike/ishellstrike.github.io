@@ -23,6 +23,7 @@ print "Generation..."
 
 os.makedirs("Generated")
 os.makedirs("Generated\Items")
+os.makedirs("Generated\Recipes")
 
 for dirpath, dirnames, filenames in os.walk(our_path + "/Generation"):
 	for filename in [f for f in filenames if f.endswith(".py")]:
@@ -39,7 +40,7 @@ div = ElementTree.Element("div")
 body.append(div)
 span = ElementTree.Element("span")
 div.append(span)
-span.text = "Hello World"
+span.text = "Evospace database"
 
 L1div = ElementTree.Element("div")
 L1 = ElementTree.Element("a", attrib={"href": "Generated/Items.html"}) 
@@ -52,6 +53,12 @@ L2 = ElementTree.Element("a", attrib={"href": "Generated/Biomes.html"})
 L2div.append(L2)
 body.append(L2div)
 L2.text = "Biomes"
+
+L3div = ElementTree.Element("div")
+L3 = ElementTree.Element("a", attrib={"href": "Generated/Recipes.html"}) 
+L3div.append(L3)
+body.append(L3div)
+L3.text = "Recipes"
 
 
 string = ElementTree.tostring(html).decode()

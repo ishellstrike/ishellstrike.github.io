@@ -113,5 +113,57 @@ for dirpath, dirnames, filenames in os.walk("Source"):
 		img = Image.open(fullname)
 		name = "Generated/Items/" + os.path.splitext(filename)[0] + ".png"
 		img.save(name)
-		print "copy " + name
 			
+recipe_index = 0			
+
+html = ElementTree.Element("html")
+body = ElementTree.Element("body")
+html.append(body)
+
+recipe_index = 0
+
+for dirpath, dirnames, filenames in os.walk("e:\Games\WindowsNoEditor\Evospace\Content\Generated\Recipes"):
+	for filename in [f for f in filenames if f.endswith(".json")]:
+		fullname = os.path.join(dirpath, filename)
+		print fullname + " is parsing"
+		
+		with open(fullname) as f:
+			data = json.load(f)
+		
+			for object in data["Objects"]:
+				if object["Class"] == "BaseRecipeDictionary":
+					for recipe in object["Recipes"]:
+						
+						div = ElementTree.Element("div")
+						body.append(div)
+						span = ElementTree.Element("span")
+						div.append(span)
+						span.text = object["Name"]
+						
+						for inp in recipe["Input"]["Items"]:
+							iconame = inp["Name"].replace("StaticItem", "Ico.png")						
+							img = ElementTree.Element("img", attrib={"src": "Items/" + iconame})
+							div.append(img)
+							span = ElementTree.Element("span")
+							span.text = str(inp["Count"])
+							div.append(span)
+							
+						span = ElementTree.Element("span")
+						div.append(span)
+						span.text = " -> "
+							
+						for inp in recipe["Output"]["Items"]:
+							iconame = inp["Name"].replace("StaticItem", "Ico.png")						
+							img = ElementTree.Element("img", attrib={"src": "Items/" + iconame})
+							div.append(img)
+							span = ElementTree.Element("span")
+							span.text = str(inp["Count"])
+							div.append(span)
+						
+						recipe_index = recipe_index + 1
+					
+string = ElementTree.tostring(html).decode()
+
+file = open("Generated/Recipes.html","w+")
+file.write(string)
+file.close()
