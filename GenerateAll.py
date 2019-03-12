@@ -22,6 +22,7 @@ for dirpath, dirnames, filenames in os.walk(our_path + "/Generation"):
 print "Generation..."
 
 os.makedirs("Generated")
+os.makedirs("Generated\Items")
 
 for dirpath, dirnames, filenames in os.walk(our_path + "/Generation"):
 	for filename in [f for f in filenames if f.endswith(".py")]:
