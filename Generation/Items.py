@@ -56,7 +56,7 @@ for dirpath, dirnames, filenames in os.walk("e:\Games\WindowsNoEditor\Evospace\C
 					for image in object["Images"]:
 					
 						try:
-							img = Image.new("RGBA", (32,32), (0,0,0,0))
+							img = Image.new("RGBA", (32,32), (255,255,255,0))
 							output = img.load()
 						
 							ibase = Image.open("Source/" + image["Base"] + ".tga")
@@ -67,7 +67,8 @@ for dirpath, dirnames, filenames in os.walk("e:\Games\WindowsNoEditor\Evospace\C
 								mpixels = mbase.load()
 								for i in range(img.size[0]):
 									for j in range(img.size[1]):
-										output[i, j] = tuple(int((l / 255.0) * (r / 255.0) * 255) for l, r in zip(pixels[i, j], mpixels[i, j]))
+										color = tuple(int((l / 255.0) * (r / 255.0) * 255) for l, r in zip(pixels[i, j], mpixels[i, j]))
+										output[i, j] = (color[0], color[1], color[2], pixels[i, j][3])
 										
 							if "AddMask" in image:
 								try:
@@ -80,7 +81,7 @@ for dirpath, dirnames, filenames in os.walk("e:\Games\WindowsNoEditor\Evospace\C
 													r = int(lerp(output[i, j][0], mpixels[i, j][0], mpixels[i, j][3] / 255.0))
 													g = int(lerp(output[i, j][1], mpixels[i, j][1], mpixels[i, j][3] / 255.0))
 													b = int(lerp(output[i, j][2], mpixels[i, j][2], mpixels[i, j][3] / 255.0))
-													a = output[i, j][3]
+													a = max(output[i, j][3], mpixels[i, j][3])
 													
 													output[i, j] = (r, g, b, a)
 									else:
@@ -91,17 +92,11 @@ for dirpath, dirnames, filenames in os.walk("e:\Games\WindowsNoEditor\Evospace\C
 												r = int(lerp(output[i, j][0], mpixels[i, j][0], mpixels[i, j][3] / 255.0))
 												g = int(lerp(output[i, j][1], mpixels[i, j][1], mpixels[i, j][3] / 255.0))
 												b = int(lerp(output[i, j][2], mpixels[i, j][2], mpixels[i, j][3] / 255.0))
-												a = output[i, j][3]
+												a = max(output[i, j][3], mpixels[i, j][3])
 												
 												output[i, j] = (r, g, b, a)
 								except IOError:
 									None
-							
-							
-							for i in range(img.size[0]):
-								for j in range(img.size[1]):
-									if pixels[i, j][3] == 0:
-										output[i, j] = (0,0,0,0)
 							
 							img.save("Generated/Items/" + image["NewName"] + ".png")
 						except IOError:
