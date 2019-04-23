@@ -10,16 +10,16 @@ our_path = os.path.dirname(sys.argv[0])
 if os.path.isdir(our_path + "/Generated"):
 	shutil.rmtree(our_path + "/Generated")
 
-print our_path + "/Generated"
-print "Cleanup..."	
+print (our_path + "/Generated")
+print ("Cleanup..."	)
 
 for dirpath, dirnames, filenames in os.walk(our_path + "/Generation"):
 	for filename in [f for f in filenames if f.endswith(".pyc")]:
 		fullname = os.path.join(dirpath, filename)
-		print fullname + " removed"
+		print (fullname + " removed")
 		os.remove(fullname)
 
-print "Generation..."
+print ("Generation...")
 
 os.makedirs("Generated")
 os.makedirs("Generated\Items")
@@ -28,10 +28,10 @@ os.makedirs("Generated\Recipes")
 for dirpath, dirnames, filenames in os.walk(our_path + "/Generation"):
 	for filename in [f for f in filenames if f.endswith(".py")]:
 		fullname = os.path.join(dirpath, filename)
-		print fullname + " is runned"
+		print (fullname + " is runned")
 		popen = subprocess.Popen("python " + fullname)
 		popen.wait()
-		print "Done"
+		print ("Done")
 
 html = ElementTree.Element("html")
 body = ElementTree.Element("body")

@@ -17,7 +17,7 @@ def lerp(x, y, a):
 for dirpath, dirnames, filenames in os.walk("e:\Games\WindowsNoEditor\Evospace\Content\Generated\Mixed"):
 	for filename in [f for f in filenames if f.endswith(".json")]:
 		fullname = os.path.join(dirpath, filename)
-		print fullname + " is parsing"
+		print (fullname + " is parsing")
 		
 		with open(fullname) as f:
 			data = json.load(f)
@@ -44,7 +44,7 @@ file.close()
 for dirpath, dirnames, filenames in os.walk("e:\Games\WindowsNoEditor\Evospace\Content\Generated\Resources"):
 	for filename in [f for f in filenames if f.endswith(".json")]:
 		fullname = os.path.join(dirpath, filename)
-		print fullname + " is parsing"
+		print (fullname + " is parsing")
 		
 		with open(fullname) as f:
 			data = json.load(f)
@@ -62,13 +62,20 @@ for dirpath, dirnames, filenames in os.walk("e:\Games\WindowsNoEditor\Evospace\C
 							ibase = Image.open("Source/" + image["Base"] + ".tga")
 							pixels = ibase.load()
 							
+							for i in range(img.size[0]):
+								for j in range(img.size[1]):
+									output[i, j] = pixels[i, j]
+							
 							if "MulMask" in image:
-								mbase = Image.open("Source/" + image["MulMask"] + ".tga")
-								mpixels = mbase.load()
-								for i in range(img.size[0]):
-									for j in range(img.size[1]):
-										color = tuple(int((l / 255.0) * (r / 255.0) * 255) for l, r in zip(pixels[i, j], mpixels[i, j]))
-										output[i, j] = (color[0], color[1], color[2], pixels[i, j][3])
+								try:
+									mbase = Image.open("Source/" + image["MulMask"] + ".tga")
+									mpixels = mbase.load()
+									for i in range(img.size[0]):
+										for j in range(img.size[1]):
+											color = tuple(int((l / 255.0) * (r / 255.0) * 255) for l, r in zip(pixels[i, j], mpixels[i, j]))
+											output[i, j] = (color[0], color[1], color[2], pixels[i, j][3])
+								except IOError:
+								    print ("Source/" + image["MulMask"] + ".tga is missed; Base image created.")
 										
 							if "AddMask" in image:
 								try:
@@ -100,7 +107,7 @@ for dirpath, dirnames, filenames in os.walk("e:\Games\WindowsNoEditor\Evospace\C
 							
 							img.save("Generated/Items/" + image["NewName"] + ".png")
 						except IOError:
-							print image["NewName"] + " err" + str(IOError)
+							print (image["NewName"] + " err" + str(IOError))
 
 for dirpath, dirnames, filenames in os.walk("Source"):
 	for filename in [f for f in filenames if f.endswith(".TGA")]:
@@ -120,7 +127,7 @@ recipe_index = 0
 for dirpath, dirnames, filenames in os.walk("e:\Games\WindowsNoEditor\Evospace\Content\Generated\Recipes"):
 	for filename in [f for f in filenames if f.endswith(".json")]:
 		fullname = os.path.join(dirpath, filename)
-		print fullname + " is parsing"
+		print (fullname + " is parsing")
 		
 		with open(fullname) as f:
 			data = json.load(f)
